@@ -132,37 +132,44 @@
 </div>
 
 <script>
-    const sheetDB_URL = "https://sheetdb.io/api/v1/kctwrdxxq5x21";
+    // --- KONFIGURACJA ---
+    const script_URL = "https://script.google.com/macros/s/AKfycby25ne3H93ofFyALI2AaJKL3u-rB8WKeocH9dqDmvMIDKFo2QUc4YJtAK9s3W0YDzn4/exec"; 
     const endDate = new Date("March 29, 2026 22:00:00").getTime();
-
+  
     let currentPrice = 0;
     let selectedStep = 0;
 
+    // --- FUNKCJA POBIERANIA ---
     async function fetchBids() {
         try {
-            const res = await fetch(sheetDB_URL);
+            const res = await fetch(script_URL); 
             if (!res.ok) throw new Error('Błąd pobierania');
             const data = await res.json();
-            if(data.length > 0) {
+            
+            if(data && data.length > 0) {
                 const bids = data.map(b => parseInt(b.bid)).filter(b => !isNaN(b));
                 if (bids.length > 0) {
                     currentPrice = Math.max(...bids);
                     document.getElementById('displayPrice').innerText = currentPrice;
+                    
                     const historyDiv = document.getElementById('bidHistory');
                     historyDiv.innerHTML = "";
                     data.slice(-5).reverse().forEach(b => {
                         const entry = document.createElement('div');
                         entry.className = 'history-entry';
-                        const firstName = b.name.trim().split(' ')[0];
+                        const firstName = b.name ? b.name.trim().split(' ')[0] : "Anonim";
                         entry.innerHTML = `<span>${firstName}</span><strong>${b.bid} PLN</strong>`;
                         historyDiv.appendChild(entry);
                     });
                 }
+            } else {
+                document.getElementById('displayPrice').innerText = "0";
+                document.getElementById('bidHistory').innerText = "Brak ofert. Bądź pierwszy!";
             }
         } catch(e) { console.log("Baza pusta lub błąd.", e); }
     }
-    fetchBids();
 
+    // --- FUNKCJA WYBORU KWOTY ---
     function setStep(val, el) {
         selectedStep = val;
         document.getElementById('newTotal').innerText = "Suma: " + (currentPrice + val) + " PLN";
@@ -170,37 +177,72 @@
         el.classList.add('active');
     }
 
+    // --- FUNKCJA WYSYŁANIA ---
     async function submitBid() {
         const name = document.getElementById('nameField').value.trim();
         const phone = document.getElementById('phoneField').value.trim();
-        if(!name || !phone || selectedStep === 0) return alert("Wpisz dane i wybierz kwotę!");
+        
+        if(!name || !phone || selectedStep === 0) {
+            return alert("Wpisz dane i wybierz kwotę!");
+        }
+        
         const btn = document.getElementById('btnSubmit');
-        btn.disabled = true; btn.innerText = "PRZESYŁANIE...";
+        btn.disabled = true; 
+        btn.innerText = "PRZESYŁANIE...";
+        
         const finalBid = currentPrice + selectedStep;
+        
+        const payload = JSON.stringify({
+            "name": name,
+            "phone": phone,
+            "bid": finalBid,
+            "time": new Date().toLocaleString()
+        });
+
         try {
-            const response = await fetch(sheetDB_URL, {
+            // Używamy no-cors dla Google Apps Script
+            await fetch(script_URL, {
                 method: 'POST',
+                mode: 'no-cors', 
+                cache: 'no-cache',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ "data": [{ "name": name, "phone": phone, "bid": finalBid, "time": new Date().toLocaleString() }]})
+                body: payload
             });
-            if (!response.ok) throw new Error('Błąd wysyłania');
+            
+            // Po wysłaniu pokazujemy modal sukcesu
             document.getElementById('thanks-modal').classList.add('active');
         } catch(e) { 
             alert("Błąd! Spróbuj ponownie."); 
             console.error(e);
-            btn.disabled = false; btn.innerText = "Potwierdź licytację"; 
+            btn.disabled = false; 
+            btn.innerText = "Potwierdź licytację"; 
         }
     }
 
+    // --- TIMER ---
     function updateTimer() {
         const now = new Date().getTime();
         const distance = endDate - now;
-        if (distance < 0) { document.getElementById("countdown").innerHTML = "KONIEC"; return; }
-        const d = Math.floor(distance / (1000*60*60*24)), h = Math.floor((distance%(1000*60*60*24))/(1000*60*60)), m = Math.floor((distance%(1000*60*60))/(1000*60)), s = Math.floor((distance%(1000*60))/1000);
+        if (distance < 0) { 
+            document.getElementById("countdown").innerHTML = "KONIEC"; 
+            document.getElementById("btnSubmit").disabled = true;
+            return; 
+        }
+        const d = Math.floor(distance / (1000*60*60*24));
+        const h = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+        const m = Math.floor((distance%(1000*60*60))/(1000*60));
+        const s = Math.floor((distance%(1000*60))/1000);
+        
         const pad = (n) => n < 10 ? "0" + n : n;
         document.getElementById("countdown").innerHTML = `${pad(d)}d : ${pad(h)}h : ${pad(m)}m : ${pad(s)}s`;
     }
-    setInterval(updateTimer, 1000); updateTimer();
+
+    // --- START ---
+    fetchBids();
+    setInterval(fetchBids, 10000); // Odświeżanie danych z arkusza co 10s
+    setInterval(updateTimer, 1000); // Odświeżanie zegara co 1s
+    updateTimer();
 </script>
+
 </body>
 </html>
