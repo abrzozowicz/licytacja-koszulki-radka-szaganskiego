@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <title>Maximum Dobroci! Zdobądź zestaw Radka Szagańskiego! 🎯🏆</title>
+    <meta property="og:title" content="🎯 Licytuj koszulkę i zdjęcie 'Szagana'! Darterska rodzina gra dla Maksa! 🏆🔥">
+    <meta property="og:description" content="Wygraj unikalny, podpisany zestaw od zwycięzcy PDC ProTour! Całkowity dochód wspiera walkę Maksymiliana Mazurka o zdrowie.🚀️❤️">
+    <meta property="og:image" content="https://i.imgur.com/0AEIjVq.jpeg"> <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://i.imgur.com/0AEIjVq.jpeg"> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon-green: #2ecc71; --neon-accent: #a3b18a; --bg-black: #000000; --card-gray: #0a0a0a; --border: #1a1a1a; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; padding: 0; background: var(--bg-black); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .full-page { width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .top-title-bar { width: 100%; background: var(--neon-accent); color: #1a1a1a; text-align: center; padding: 15px 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; font-size: 1.1rem; box-shadow: 0 5px 20px rgba(163, 177, 138, 0.2); }
+        .description-stack { width: 100%; padding: 0 20px; margin-bottom: 25px; }
+        .desc-box { background: var(--card-gray); border: 1px solid var(--border); padding: 25px; border-radius: 15px; margin-bottom: 20px; width: 100%; }
+        .desc-box h3 { color: var(--neon-accent); text-transform: uppercase; margin-top: 0; border-bottom: 1px solid #1a1a1a; padding-bottom: 12px; margin-bottom: 18px; }
+        .timer-section { width: 100%; padding: 30px 20px; text-align: center; background: #050505; }
+        #countdown { font-size: clamp(2.5rem, 10vw, 5.5rem); font-weight: 950; color: white; }
+        .panoramic-gallery { width: calc(100% - 40px); margin: 0 20px 40px 20px; display: flex; height: 50vh; background: #050505; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); }
+        .photo-slot { flex: 1; display: flex; align-items: center; justify-content: center; border-right: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: flex 0.5s ease; }
+        .photo-slot:hover { flex: 2; }
+        .photo-slot img { width: 100%; height: 100%; object-fit: contain; padding: 20px; }
+        .photo-slot:last-child { border-right: none; }
+        .main-price { font-size: clamp(4.5rem, 18vw, 9rem); font-weight: 950; color: var(--neon-green); text-align: center; }
+        .tiles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; width: 100%; max-width: 800px; padding: 0 20px; }
+        .bid-tile { background: var(--card-gray); border: 1px solid var(--border); padding: 20px 0; border-radius: 12px; color: var(--neon-accent); font-weight: 900; font-size: 1.5rem; text-align: center; cursor: pointer; }
+        .bid-tile.active { border-color: var(--neon-green); color: var(--neon-green); background: rgba(46,204,113,0.1); }
+        .form-history-grid { display: grid; grid-template-columns: 1fr; gap: 30px; width: 100%; max-width: 1000px; padding: 0 20px; }
+        .panel-box { background: var(--card-gray); padding: 30px; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
+        input { width: 100%; padding: 15px; margin-bottom: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 10px; text-align: center; font-size: 1rem; }
+        .submit-btn { width: 100%; padding: 20px; background: var(--neon-green); color: black; font-weight: 900; border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; font-size: 1.2rem; }
+        .submit-btn:disabled { background: #333; color: #888; cursor: not-allowed; }
+        .history-entry { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1a1a1a; font-size: 1.1rem; }
+        .history-entry strong { color: var(--neon-green); }
+        .delivery-box { background: #0a0a0a; border: 1px dashed #333; padding: 25px; border-radius: 15px; text-align: center; margin-bottom: 40px; }
+        .delivery-box h4 { color: var(--neon-accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; margin-top: 0; }
+        #thanks-modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
+        #thanks-modal.active { display: flex; flex-direction: column; }
+    </style>
+</head>
+<body>
+
+<div id="thanks-modal">
+    <h2 style="color: var(--neon-green); font-size: 2.5rem;">DZIĘKUJEMY!</h2>
+    <p>Dla Ciebie to pamiątka, dla Maksa to bezcenna pomoc. 🚀❤️</p>
+    <button style="padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; margin-top: 20px; background: var(--neon-accent); border: none; color: black; text-transform: uppercase;" onclick="location.reload()">Zamknij</button>
+</div>
+
+<div class="full-page">
+    <div class="top-title-bar">🎯 Koszulka i Zdjęcie 'Szagana' dla Maksa! 🏆</div>
+
+    <div class="description-stack" style="margin-top: 20px;">
+        <div class="desc-box">
+            <h3>🎯 O przedmiocie</h3>
+            <p style="color: #ccc; line-height: 1.6; white-space: pre-line;">
+                🎯 Licytuj zestaw Radka Szagańskiego! 🏆🔥
+
+                Darterska rodzina nie zostawia swoich! Dzisiaj Dart nabiera innego znaczenia – każdy punkt każda cegiełka w tej licytacji to realna pomoc dla Maksymiliana Mazurka. Dołącz do gry i zdobądź unikat od jednego z najbardziej walecznych polskich darterów! 
+
+                Przed Tobą zestaw od Radka Szagańskiego – zawodnika, który jako drugi Polak w historii wygrał prestiżowy turniej rankingowy PDC ProTour, udowadniając, że ciężką pracą można sięgnąć gwiazd. ✨ 
+
+                Co możesz zdobyć? 
+                🎽 Oryginalną koszulkę startową "Szagana" – w której Radek rywalizuje z elitą światowego darta. 
+                ✍️ Autograf mistrza na koszulce.
+                🖼️ Unikatowe, pamiątkowe zdjęcie z turnieju, również z autografem!
+
+                To nie jest zwykła licytacja. To "maximum" dobroci dla Maksa. Całkowity dochód z tej aukcji wspiera walkę Maksymiliana o powrót do zdrowia.
+            </p>
+        </div>
+    </div>
+
+    <section class="timer-section">
+        <div style="color: var(--neon-accent); margin-bottom: 10px; font-weight: bold; letter-spacing: 2px;">KONIEC LICYTACJI ZA:</div>
+        <div id="countdown">00 : 00 : 00 : 00</div>
+    </section>
+
+    <section class="panoramic-gallery">
+        <div class="photo-slot"><img src="https://i.imgur.com/nc4N41h.png" alt="Koszulka Szagana 1"></div>
+        <div class="photo-slot"><img src="https://i.imgur.com/DZ6J6eA.png" alt="Koszulka Szagana 2"></div>
+        <div class="photo-slot"><img src="https://i.imgur.com/dN7tRzs.jpeg" alt="Pamiątkowe zdjęcie Szagana"></div>
+    </section>
+
+    <div class="main-price" id="displayPrice">0</div>
+    <div style="color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; text-align: center;">Aktualna cena (PLN)</div>
+
+    <div class="tiles-grid">
+        <div class="bid-tile" onclick="setStep(10, this)">+10</div>
+        <div class="bid-tile" onclick="setStep(20, this)">+20</div>
+        <div class="bid-tile" onclick="setStep(50, this)">+50</div>
+        <div class="bid-tile" onclick="setStep(100, this)">+100</div>
+        <div class="bid-tile" onclick="setStep(200, this)">+200</div>
+        <div class="bid-tile" onclick="setStep(500, this)">+500</div>
+    </div>
+
+    <div class="form-history-grid">
+        <div class="panel-box">
+            <input type="text" id="nameField" placeholder="Twoje Imię i Nazwisko">
+            <input type="tel" id="phoneField" placeholder="Twój numer telefonu">
+            <div id="newTotal" style="font-size: 1.5rem; color: var(--neon-green); margin: 15px 0;">Suma: --- PLN</div>
+            <button class="submit-btn" id="btnSubmit" onclick="submitBid()">Potwierdź licytację</button>
+        </div>
+        <div class="panel-box">
+            <h4 style="color: #444; text-transform: uppercase;">Historia licytacji</h4>
+            <div id="bidHistory">Brak ofert. Bądź pierwszy!</div>
+        </div>
+    </div>
+
+    <div class="description-stack" style="margin-top: 30px;">
+        <div class="delivery-box">
+            <h4>📦 Dostawa</h4>
+            <p style="color: #888; line-height: 1.6;">
+                Koszulkę i zdjęcie wysyłamy za pobraniem. Ewentualnie istnieje możliwość odbioru osobiście w Częstochowie po wcześniejszym kontakcie telefonicznym.
+            </p>
+        </div>
+        <div class="desc-box">
+            <h3>📜 Zasady Licytacji</h3>
+            <p style="color: #ccc; line-height: 1.6;">
+                Otwórzmy serca i pokażmy siłę darterskiej społeczności! Licytuj odważnie – dla Ciebie ten unikatowy zestaw to piękna pamiątka, dla Maksa to bezcenna pomoc. 🚀❤️<br><br>
+                1. Licytujemy o <strong>min. 10 zł</strong> (dyszkę) więcej.<br>
+                2. Wygrywa najwyższa oferta złożona w stosownym czasie.<br>
+                3. Po zakończeniu licytacji skontaktujemy się ze zwycięzcą.<br>
+                4. W przypadku wycofania się zwycięzcy, nagroda zostanie przekazana do kolejnej osoby z najwyższą wylicytowaną kwotą.<br><br>
+                📅 <strong>Finał licytacji:</strong> Niedziela, 29 marca 2026, godz. 22:00.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const sheetDB_URL = "https://sheetdb.io/api/v1/kctwrdxxq5x21";
+    const endDate = new Date("March 29, 2026 22:00:00").getTime();
+
+    let currentPrice = 0;
+    let selectedStep = 0;
+
+    async function fetchBids() {
+        try {
+            const res = await fetch(sheetDB_URL);
+            if (!res.ok) throw new Error('Błąd pobierania');
+            const data = await res.json();
+            if(data.length > 0) {
+                const bids = data.map(b => parseInt(b.bid)).filter(b => !isNaN(b));
+                if (bids.length > 0) {
+                    currentPrice = Math.max(...bids);
+                    document.getElementById('displayPrice').innerText = currentPrice;
+                    const historyDiv = document.getElementById('bidHistory');
+                    historyDiv.innerHTML = "";
+                    data.slice(-5).reverse().forEach(b => {
+                        const entry = document.createElement('div');
+                        entry.className = 'history-entry';
+                        const firstName = b.name.trim().split(' ')[0];
+                        entry.innerHTML = `<span>${firstName}</span><strong>${b.bid} PLN</strong>`;
+                        historyDiv.appendChild(entry);
+                    });
+                }
+            }
+        } catch(e) { console.log("Baza pusta lub błąd.", e); }
+    }
+    fetchBids();
+
+    function setStep(val, el) {
+        selectedStep = val;
+        document.getElementById('newTotal').innerText = "Suma: " + (currentPrice + val) + " PLN";
+        document.querySelectorAll('.bid-tile').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    async function submitBid() {
+        const name = document.getElementById('nameField').value.trim();
+        const phone = document.getElementById('phoneField').value.trim();
+        if(!name || !phone || selectedStep === 0) return alert("Wpisz dane i wybierz kwotę!");
+        const btn = document.getElementById('btnSubmit');
+        btn.disabled = true; btn.innerText = "PRZESYŁANIE...";
+        const finalBid = currentPrice + selectedStep;
+        try {
+            const response = await fetch(sheetDB_URL, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ "data": [{ "name": name, "phone": phone, "bid": finalBid, "time": new Date().toLocaleString() }]})
+            });
+            if (!response.ok) throw new Error('Błąd wysyłania');
+            document.getElementById('thanks-modal').classList.add('active');
+        } catch(e) { 
+            alert("Błąd! Spróbuj ponownie."); 
+            console.error(e);
+            btn.disabled = false; btn.innerText = "Potwierdź licytację"; 
+        }
+    }
+
+    function updateTimer() {
+        const now = new Date().getTime();
+        const distance = endDate - now;
+        if (distance < 0) { document.getElementById("countdown").innerHTML = "KONIEC"; return; }
+        const d = Math.floor(distance / (1000*60*60*24)), h = Math.floor((distance%(1000*60*60*24))/(1000*60*60)), m = Math.floor((distance%(1000*60*60))/(1000*60)), s = Math.floor((distance%(1000*60))/1000);
+        const pad = (n) => n < 10 ? "0" + n : n;
+        document.getElementById("countdown").innerHTML = `${pad(d)}d : ${pad(h)}h : ${pad(m)}m : ${pad(s)}s`;
+    }
+    setInterval(updateTimer, 1000); updateTimer();
+</script>
+</body>
+</html>
