@@ -219,15 +219,41 @@
         }
     }
 
-    // --- TIMER ---
+// --- TIMER ---
     function updateTimer() {
         const now = new Date().getTime();
         const distance = endDate - now;
-        if (distance < 0) { 
-            document.getElementById("countdown").innerHTML = "KONIEC"; 
-            document.getElementById("btnSubmit").disabled = true;
+        
+        if (distance <= 0) { 
+            document.getElementById("countdown").innerHTML = "ZAKOŃCZONO"; 
+            
+            const btn = document.getElementById("btnSubmit");
+            if (btn && btn.innerText !== "DZIĘKUJEMY ZA LICYTACJĘ! ❤️") {
+                // 1. Wyłączamy przycisk i zmieniamy jego wygląd na napis końcowy
+                btn.disabled = true;
+                btn.onclick = null; // Blokujemy funkcję kliknięcia
+                btn.style.background = "transparent";
+                btn.style.border = "2px solid var(--neon-green)";
+                btn.style.color = "var(--neon-green)";
+                btn.style.cursor = "default";
+                btn.innerText = "DZIĘKUJEMY ZA LICYTACJĘ! ❤️";
+
+                // 2. Ukrywamy zbędne elementy formularza, by strona była czytelna
+                const tiles = document.querySelector('.tiles-grid');
+                if(tiles) tiles.style.display = 'none';
+                
+                const nameInp = document.getElementById('nameField');
+                if(nameInp) nameInp.style.display = 'none';
+                
+                const phoneInp = document.getElementById('phoneField');
+                if(phoneInp) phoneInp.style.display = 'none';
+                
+                const totalLabel = document.getElementById('newTotal');
+                if(totalLabel) totalLabel.style.display = 'none';
+            }
             return; 
         }
+
         const d = Math.floor(distance / (1000*60*60*24));
         const h = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
         const m = Math.floor((distance%(1000*60*60))/(1000*60));
