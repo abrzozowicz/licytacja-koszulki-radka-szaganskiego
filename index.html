@@ -139,6 +139,14 @@
     let currentPrice = 0;
     let selectedStep = 0;
 
+    // --- FUNKCJA WCZYTYWANIA ZAPAMIĘTANYCH DANYCH ---
+    function loadUserData() {
+        const savedName = localStorage.getItem('bidderName');
+        const savedPhone = localStorage.getItem('bidderPhone');
+        if (savedName) document.getElementById('nameField').value = savedName;
+        if (savedPhone) document.getElementById('phoneField').value = savedPhone;
+    }
+
     // --- FUNKCJA POBIERANIA ---
     async function fetchBids() {
         try {
@@ -185,6 +193,10 @@
         if(!name || !phone || selectedStep === 0) {
             return alert("Wpisz dane i wybierz kwotę!");
         }
+
+        // ZAPAMIĘTUJEMY DANE W PRZEGLĄDARCE
+        localStorage.setItem('bidderName', name);
+        localStorage.setItem('bidderPhone', phone);
         
         const btn = document.getElementById('btnSubmit');
         btn.disabled = true; 
@@ -200,7 +212,6 @@
         });
 
         try {
-            // Używamy no-cors dla Google Apps Script
             await fetch(script_URL, {
                 method: 'POST',
                 mode: 'no-cors', 
@@ -209,7 +220,6 @@
                 body: payload
             });
             
-            // Po wysłaniu pokazujemy modal sukcesu
             document.getElementById('thanks-modal').classList.add('active');
         } catch(e) { 
             alert("Błąd! Spróbuj ponownie."); 
@@ -219,7 +229,7 @@
         }
     }
 
-// --- TIMER ---
+    // --- TIMER ---
     function updateTimer() {
         const now = new Date().getTime();
         const distance = endDate - now;
@@ -229,16 +239,14 @@
             
             const btn = document.getElementById("btnSubmit");
             if (btn && btn.innerText !== "DZIĘKUJEMY ZA LICYTACJĘ! ❤️") {
-                // 1. Wyłączamy przycisk i zmieniamy jego wygląd na napis końcowy
                 btn.disabled = true;
-                btn.onclick = null; // Blokujemy funkcję kliknięcia
+                btn.onclick = null; 
                 btn.style.background = "transparent";
                 btn.style.border = "2px solid var(--neon-green)";
                 btn.style.color = "var(--neon-green)";
                 btn.style.cursor = "default";
                 btn.innerText = "DZIĘKUJEMY ZA LICYTACJĘ! ❤️";
 
-                // 2. Ukrywamy zbędne elementy formularza, by strona była czytelna
                 const tiles = document.querySelector('.tiles-grid');
                 if(tiles) tiles.style.display = 'none';
                 
@@ -264,9 +272,10 @@
     }
 
     // --- START ---
+    loadUserData(); // Wczytaj dane na start
     fetchBids();
-    setInterval(fetchBids, 10000); // Odświeżanie danych z arkusza co 10s
-    setInterval(updateTimer, 1000); // Odświeżanie zegara co 1s
+    setInterval(fetchBids, 10000); 
+    setInterval(updateTimer, 1000); 
     updateTimer();
 </script>
 
